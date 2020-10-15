@@ -1,5 +1,9 @@
-import Data.Foldable (asum)
 import Data.Maybe (fromMaybe)
+
+
+-- | Zips together lists of monoids using mappend
+monoidZipAll :: (Foldable t, Monoid c) => t [c] -> [c]
+monoidZipAll = foldr (zipWith mappend) (repeat mempty)
 
 
 -- | Allows fizz and buzz list to be easily made
@@ -12,7 +16,7 @@ mults n text = cycle $ replicate (n - 1) Nothing ++ [Just text]
 -- If there are no strings, then the 1-based index is used.
 combine :: Foldable t => t [Maybe String] -> [String]
 combine parts = zipWith (flip fromMaybe)
-                    (asum parts)
+                    (monoidZipAll parts)
                   $ map show [1..]
 
 
